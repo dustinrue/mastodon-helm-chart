@@ -1,0 +1,121 @@
+# Default values for mastodon.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: tootsuite/mastodon
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: domain.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+mastodon:
+  env:
+    - name: LOCAL_DOMAIN
+      value: "domain.com"
+    - name: SINGLE_USER_MODE
+      value: "true"
+    - name: SECRET_KEY_BASE
+      value: "some random string"
+    - name: OTP_SECRET
+      value: "a different random string"
+    - name: VAPID_PRIVATE_KEY
+      value: "another string but this one seems more special"
+    - name: VAPID_PUBLIC_KEY
+      value: "like the private but public"
+    - name: DB_HOST
+      value: "postgresql"
+    - name: DB_PORT
+      value: "5432"
+    - name: DB_NAME
+      value: "mastodon"
+    - name: DB_USER
+      value: "mastodon"
+    - name: DB_PASS
+      value: "password"
+    - name: REDIS_HOST
+      value: "redis-master"
+    - name: REDIS_PORT
+      value: "6379"
+    - name: REDIS_PASSWORD
+      value: "mastodon"
+    - name: SMTP_SERVER
+      value: "mailhog"
+    - name: SMTP_PORT
+      value: "1025"
+    - name: SMTP_AUTH_METHOD
+      value: "none"
+    - name: SMTP_OPENSSL_VERIFY_MODE
+      value: "none"
+    - name: SMTP_FROM_ADDRESS
+      value: "Mastodon <notifications@domain.com>"
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

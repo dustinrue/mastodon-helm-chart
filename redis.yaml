@@ -1,0 +1,16 @@
+## @param architecture Redis&reg; architecture. Allowed values: `standalone` or `replication`
+##
+architecture: standalone
+## Redis&reg; Authentication parameters
+## ref: https://github.com/bitnami/containers/tree/main/bitnami/redis#setting-the-server-password-on-first-run
+##
+auth:
+  password: "mastodon"
+master:
+  disableCommands: []
+  persistence:
+    storageClass: "freenas-iscsi-csi"
+replica:
+  ## @param replica.replicaCount Number of Redis&reg; replicas to deploy
+  ##
+  replicaCount: 0
