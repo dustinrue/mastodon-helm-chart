@@ -8,8 +8,8 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
+      targetPort: web
       protocol: TCP
-      name: http
+      name: web
   selector:
     {{- include "mastodon.selectorLabels" . | nindent 4 }}

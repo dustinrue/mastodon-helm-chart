@@ -27,6 +27,9 @@ spec:
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # Purpose of this init container is to apply any pending database upgrades
+      # and init the installation if it is new. This should be moved to an install
+      # hook
       initContainers:
         - name: {{ .Chart.Name }}-init
           securityContext:
@@ -46,15 +49,15 @@ spec:
           env:
           {{- toYaml .Values.mastodon.env | nindent 12 }}
           ports:
-            - name: http
+            - name: web
               containerPort: 3000
               protocol: TCP
           livenessProbe:
             tcpSocket:
-              port: http
+              port: web
           readinessProbe:
             tcpSocket:
-              port: http
+              port: web
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-streaming

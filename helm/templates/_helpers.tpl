@@ -60,3 +60,39 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+# Items adapted from https://github.com/mastodon/mastodon/blob/51a33ce77a32b85eaff37670c40a497aaef13e18/chart/templates/_helpers.tpl
+# Pull 2022-11-21
+{{/*
+Get the mastodon secret.
+*/}}
+{{- define "mastodon.secretName" -}}
+{{- if .Values.mastodon.secrets.existingSecret }}
+    {{- printf "%s" (tpl .Values.mastodon.secrets.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "mastodon.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the postgresql secret.
+*/}}
+{{- define "mastodon.postgresql.secretName" -}}
+{{- if .Values.mastodon.postgresql.existingSecret }}
+    {{- printf "%s" (tpl .Values.postgresql.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "mastodon.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the redis secret.
+*/}}
+{{- define "mastodon.redis.secretName" -}}
+{{- if .Values.mastodon.redis.existingSecret }}
+    {{- printf "%s" (tpl .Values.mastodon.redis.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s-redis" (tpl .Release.Name $) -}}
+{{- end -}}
+{{- end -}}
