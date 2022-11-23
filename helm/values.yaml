@@ -78,7 +78,13 @@ resources: {}
 # VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY - docker run --rm -ti tootsuite/mastodon:latest bundle exec rake mastodon:webpush:generate_vapid_key
 # Update the values below and note that you cannot change though without causing trouble for users.
 mastodon:
+  local_domain: mastodon.local
+  # Use of WEB_DOMAIN requires careful consideration: https://docs.joinmastodon.org/admin/config/#federation
+  # You must redirect the path LOCAL_DOMAIN/.well-known/ to WEB_DOMAIN/.well-known/ as described
+  # web_domain: mastodon.example.com
+  # If set to true, the frontpage of your Mastodon server will always redirect to the first profile in the database and registrations will be disabled.
   singleUserMode: false
+  
   secrets:
     # name of an existing secret that will contain the following values
     #   SECRET_KEY_BASE
@@ -125,6 +131,7 @@ mastodon:
   postgresql:
     existingSecret: ""
     host: ""
+    database: ""
     port: 5432
     auth:
       username: ""
@@ -132,8 +139,10 @@ mastodon:
   redis:
     existingSecret: ""
     host: ""
+    database: "" # what database, 0, 1, etc
     port: 6379
-    password: ""
+    auth:
+      password: ""
   elasticsearch:
     existingSecret: ""
     host: "" # setting a host value will enable Elasticsearch support

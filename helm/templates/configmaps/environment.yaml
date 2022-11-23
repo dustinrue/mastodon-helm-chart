@@ -23,13 +23,13 @@ data:
   {{- if .Values.mastodon.web_domain }}
   WEB_DOMAIN: {{ .Values.mastodon.web_domain }}
   {{- end }}
-  SINGLE_USER_MODE: {{ .Values.mastodon.singleUserMode | default "false" }}
+  SINGLE_USER_MODE: {{ .Values.mastodon.singleUserMode | default "false" | quote }}
   # https://devcenter.heroku.com/articles/tuning-glibc-memory-behavior
   MALLOC_ARENA_MAX: "2"
   NODE_ENV: "production"
   RAILS_ENV: "production"
   REDIS_HOST: {{ .Values.mastodon.redis.host }}
-  REDIS_PORT: {{ .Values.mastodon.redis.port | default "6379" }}
+  REDIS_PORT: {{ .Values.mastodon.redis.port | default "6379" | quote }}
   {{- if ( eq .Values.mastodon.storage.type "s3" ) }}
   S3_BUCKET: {{ .Values.mastodon.storage.s3.bucket }}
   S3_ENABLED: "true"

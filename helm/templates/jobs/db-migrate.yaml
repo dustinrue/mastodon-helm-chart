@@ -48,6 +48,8 @@ spec:
         - name: {{ include "mastodon.fullname" . }}-db-migrate
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          tty: true
+          stdin: true
           command:
             - bundle
             - exec
@@ -63,12 +65,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ template "mastodon.postgresql.secretName" . }}
-                  key: password
+                  key: DB_PASS
             - name: "REDIS_PASSWORD"
               valueFrom:
                 secretKeyRef:
                   name: {{ template "mastodon.redis.secretName" . }}
-                  key: redis-password
+                  key: REDIS_PASS
             - name: "PORT"
               value: {{ .Values.mastodon.web.port | quote }}
           {{- if (eq .Values.mastodon.storage.type "csi" ) }}

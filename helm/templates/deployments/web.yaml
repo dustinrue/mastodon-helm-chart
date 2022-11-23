@@ -13,7 +13,7 @@ spec:
       {{- include "mastodon.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.podAnnotations }}-web
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -27,18 +27,6 @@ spec:
       serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      # Purpose of this init container is to apply any pending database upgrades
-      # and init the installation if it is new. This should be moved to an install
-      # hook
-      initContainers:
-        - name: {{ .Chart.Name }}-init
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bundle", "exec", "rake", "db:migrate"]
-          env:
-          {{- toYaml .Values.mastodon.env | nindent 12 }}
       containers:
         - name: {{ .Chart.Name }}-web
           securityContext:

@@ -93,6 +93,6 @@ Get the redis secret.
 {{- if .Values.mastodon.redis.existingSecret }}
     {{- printf "%s" (tpl .Values.mastodon.redis.existingSecret $) -}}
 {{- else -}}
-    {{- printf "%s-redis" (tpl .Release.Name $) -}}
+    {{- printf "%s" (tpl .Release.Name $) -}}
 {{- end -}}
 {{- end -}}
