@@ -13,12 +13,16 @@ spec:
       {{- include "mastodon.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
+        {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- end }}
+        # roll the pods to pick up any db migrations or other changes
+        {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
       labels:
         {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sidekiq
+        app.kubernetes.io/part-of: rails
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -28,54 +32,28 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-web
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
-          env:
-          {{- toYaml .Values.mastodon.env | nindent 12 }}
-          ports:
-            - name: web
-              containerPort: 3000
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: web
-          readinessProbe:
-            tcpSocket:
-              port: web
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        - name: {{ .Chart.Name }}-streaming
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/opt/node/bin/node", "./streaming"]
-          env:
-          {{- toYaml .Values.mastodon.env | nindent 12 }}
-          ports:
-            - name: streaming
-              containerPort: 4000
-              protocol: TCP
-          livenessProbe:
-            tcpSocket:
-              port: streaming
-          readinessProbe:
-            tcpSocket:
-              port: streaming
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
         - name: {{ .Chart.Name }}-sidekiq
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["bundle", "exec", "sidekiq", "-c", "25"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "mastodon.fullname" . }}-env
+            - secretRef:
+                name: {{ template "mastodon.secretName" . }}
           env:
-          {{- toYaml .Values.mastodon.env | nindent 12 }}
+            - name: "DB_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mastodon.postgresql.secretName" . }}
+                  key: DB_PASS
+            - name: "REDIS_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mastodon.redis.secretName" . }}
+                  key: REDIS_PASS
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
