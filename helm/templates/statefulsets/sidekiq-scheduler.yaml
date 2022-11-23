@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "mastodon.fullname" . }}-sidekiq-scheduler
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        # roll the pods to pick up any db migrations or other changes
+        {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
+      labels:
+        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sidekiq
+        app.kubernetes.io/part-of: rails
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mastodon.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-sidekiq-scheduler
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bundle", "exec", "sidekiq", "-c", "25", "-q", "scheduler"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "mastodon.fullname" . }}-env
+            - secretRef:
+                name: {{ template "mastodon.secretName" . }}
+          env:
+            - name: "DB_PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mastodon.postgresql.secretName" . }}
+                  key: DB_PASS
+            - name: "REDIS_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "mastodon.redis.secretName" . }}
+                  key: REDIS_PASS
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

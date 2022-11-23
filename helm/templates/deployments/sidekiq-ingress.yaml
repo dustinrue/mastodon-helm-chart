@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mastodon.fullname" . }}-sidekiq
+  name: {{ include "mastodon.fullname" . }}-sidekiq-ingress
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
 spec:
@@ -32,12 +32,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-sidekiq
+        - name: {{ .Chart.Name }}-sidekiq-ingress
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bundle", "exec", "sidekiq", "-c", "25"]
+          command: ["bundle", "exec", "sidekiq", "-c", "25", "-q", "ingress"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
