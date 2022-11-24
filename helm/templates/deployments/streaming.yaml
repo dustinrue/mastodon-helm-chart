@@ -68,15 +68,15 @@ spec:
               port: streaming
           resources:
             {{- toYaml .Values.streaming.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.streaming.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.streaming.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.streaming.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

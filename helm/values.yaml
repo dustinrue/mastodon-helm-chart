@@ -362,6 +362,7 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+# Global selectors for jobs, cronjobs, etc. Does not affect Sidekiq, Web or Streaming
 nodeSelector: {}
 
 tolerations: []

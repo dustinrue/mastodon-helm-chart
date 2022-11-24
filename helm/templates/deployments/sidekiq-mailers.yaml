@@ -56,15 +56,15 @@ spec:
                   key: REDIS_PASS
           resources:
             {{- toYaml .Values.sidekiq.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.sidekiq.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.sidekiq.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.sidekiq.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
