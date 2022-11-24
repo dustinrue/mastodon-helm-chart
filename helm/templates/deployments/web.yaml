@@ -35,7 +35,8 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bundle", "exec", "puma", "-C", "config/puma.rb"]
+          command: ["/bin/sh","-c"]
+          args: ["bundle exec rake assets:precompile && bundle exec puma -C config/puma.rb"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
