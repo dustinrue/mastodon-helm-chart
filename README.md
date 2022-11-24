@@ -1,12 +1,18 @@
-# Example Mastodon Helm Chart
+# Mastodon Helm Chart
 
 In this repo is what I created when attempting to test Mastodon (https://github.com/mastodon/mastodon) running on Kubernetes. I did this purely to learn and am providing it for reference. I will not go into great detail on how to set this up.
+
+This chart pulls in a lot of work from the chart provided by the main project but removes external dependencies. I feel that those dependencies should be left to the server administrator to decide on and setup manually. This chart also breaks Sidekiq out into discrete deployments for each queue and allows you to enable autoscaling for Sidekiq, Web and Streaming individually. At this time, Sidekiq autoscaling min/max values will affect all Sidekiq deployments except the scheduler which is locked to one in accordance to the documentation.
 
 ## Usage
 
 I am assuming you have a basic understanding of using Kubernetes. I also assume you are familiar with helm. You'll need helm 3. You will very likely need to adjust the values files I provide. There are many settings that are specific to my setup, like using ingress-nginx and democratic-csi to provision iscsi storage from TrueNAS.
 
-### Add Jelm Repositories
+Be sure to adjust settings for your environment. Below is information about how to get this running using Redis and PostgreSQL in your Kube cluster. This shouldn't be considered a "production" configuration but can certainly work for a personal setup if you wanted to.
+
+### Add Helm Repositories
+
+If you wish to run everything in Kubernetes, including Redis and PostgreSQL do the following.
 
 * `helm repo add bitnami https://charts.bitnami.com/bitnami`
 * `helm repo add codecentric https://codecentric.github.io/helm-charts`
@@ -21,11 +27,11 @@ According to the install docs, PostgreSQL and Redis are both required to be runn
 
 ### Installing Mastodon
 
-In the helm directory, edit the values file to match your settings. Then apply to your cluster with:
+In the helm directory, edit the values file or create a new one and reference it using `-f <filename>` to match your settings. Then apply to your cluster with:
 
 * `helm install -n mastodon mastodon .`
 
-This will install three copies of the Mastodon docker image, each running a specific aspect of Mastodon including web, streaming and sidekiq. In my testing I was able to do everything a normal Mastodon instance can do. What I did not do was setup any storage for media uploads.
+This will install multiple copies of the Mastodon docker image, each running a specific aspect of Mastodon including web, streaming and sidekiq. In my testing I was able to do everything a normal Mastodon instance can do. What I did not do was setup any storage for media uploads.
 
 ## Contact
 
