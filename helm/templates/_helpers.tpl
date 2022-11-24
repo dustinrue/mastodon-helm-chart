@@ -60,3 +60,48 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+# Items adapted from https://github.com/mastodon/mastodon/blob/51a33ce77a32b85eaff37670c40a497aaef13e18/chart/templates/_helpers.tpl
+# Pulled 2022-11-21
+{{/*
+Rolling pod annotations
+*/}}
+{{- define "mastodon.rollingPodAnnotations" -}}
+rollme: {{ .Release.Revision | quote }}
+checksum/config-secrets: {{ include ( print $.Template.BasePath "/secrets/environment.yaml" ) . | sha256sum | quote }}
+checksum/config-configmap: {{ include ( print $.Template.BasePath "/configmaps/environment.yaml" ) . | sha256sum | quote }}
+{{- end }}
+
+{{/*
+Get the mastodon secret.
+*/}}
+{{- define "mastodon.secretName" -}}
+{{- if .Values.mastodon.secrets.existingSecret }}
+    {{- printf "%s" (tpl .Values.mastodon.secrets.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "mastodon.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the postgresql secret.
+*/}}
+{{- define "mastodon.postgresql.secretName" -}}
+{{- if .Values.mastodon.postgresql.existingSecret }}
+    {{- printf "%s" (tpl .Values.postgresql.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (include "mastodon.fullname" .) -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Get the redis secret.
+*/}}
+{{- define "mastodon.redis.secretName" -}}
+{{- if .Values.mastodon.redis.existingSecret }}
+    {{- printf "%s" (tpl .Values.mastodon.redis.existingSecret $) -}}
+{{- else -}}
+    {{- printf "%s" (tpl .Release.Name $) -}}
+{{- end -}}
+{{- end -}}
