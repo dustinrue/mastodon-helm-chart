@@ -84,7 +84,11 @@ mastodon:
   # web_domain: mastodon.example.com
   # If set to true, the frontpage of your Mastodon server will always redirect to the first profile in the database and registrations will be disabled.
   singleUserMode: false
-  
+  cron:
+    # run `tootctl media remove` every week
+    removeMedia:
+      enabled: true
+      schedule: "0 0 * * 0"
   secrets:
     # name of an existing secret that will contain the following values
     #   SECRET_KEY_BASE
@@ -145,6 +149,7 @@ mastodon:
     auth:
       password: ""
   elasticsearch:
+    enabled: false
     existingSecret: ""
     host: "" # setting a host value will enable Elasticsearch support
     port: 9200
