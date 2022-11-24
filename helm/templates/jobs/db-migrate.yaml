@@ -72,8 +72,6 @@ spec:
                 secretKeyRef:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
-            - name: "PORT"
-              value: {{ .Values.mastodon.web.port | quote }}
           {{- if (eq .Values.mastodon.storage.type "csi" ) }}
           volumeMounts:
             - name: assets

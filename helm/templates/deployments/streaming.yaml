@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not .Values.streaming.autoscaling.enabled }}
+  replicas: {{ .Values.streaming.replicas }}
   {{- end }}
   selector:
     matchLabels:
@@ -67,7 +67,7 @@ spec:
               path: /api/v1/streaming/health
               port: streaming
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.streaming.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

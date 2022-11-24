@@ -53,7 +53,7 @@ spec:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.sidekiq.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

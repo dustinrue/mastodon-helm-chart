@@ -5,8 +5,8 @@ metadata:
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not .Values.sidekiq.autoscaling.enabled }}
+  replicas: {{ .Values.sidekiq.replicas }}
   {{- end }}
   selector:
     matchLabels:
@@ -55,7 +55,7 @@ spec:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.sidekiq.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

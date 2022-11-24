@@ -69,7 +69,7 @@ resources: {}
   #   memory: 128Mi
 
 ##
-# Setup Mastodon environment values. Review the Secrets section of this page https://docs.joinmastodon.org/admin/config/ for more information about each value
+# Setup global Mastodon environment values. Review the Secrets section of this page https://docs.joinmastodon.org/admin/config/ for more information about each value
 # 
 # If you have Docker installed, you can generate SECRET_KEY_BASE, OTP_SECRET, 
 # VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY using the following commands:
@@ -154,8 +154,8 @@ mastodon:
     host: "" # setting a host value will enable Elasticsearch support
     port: 9200
     # auth - this should be added, ES does support auth or could have a proxy in front of it
-  web:
-    port: 3000
+  
+
   smtp:
     auth_method: plain
     ca_file: /etc/ssl/certs/ca-certificates.crt
@@ -177,40 +177,54 @@ mastodon:
     statsd:
       # Enable statsd publishing via STATSD_ADDR environment variable
       address: ""
-  env:
-    - name: LOCAL_DOMAIN
-      value: "domain.com"
-    - name: SINGLE_USER_MODE
-      value: "true"
-    - name: DB_HOST
-      value: "postgresql"
-    - name: DB_PORT
-      value: "5432"
-    - name: DB_NAME
-      value: "mastodon"
-    - name: DB_USER
-      value: "mastodon"
-    - name: DB_PASS
-      value: "password"
-    - name: REDIS_HOST
-      value: "redis-master"
-    - name: REDIS_PORT
-      value: "6379"
-    - name: REDIS_PASSWORD
-      value: "mastodon"
-    - name: SMTP_SERVER
-      value: "mailhog"
-    - name: SMTP_PORT
-      value: "1025"
-    - name: SMTP_AUTH_METHOD
-      value: "none"
-    - name: SMTP_OPENSSL_VERIFY_MODE
-      value: "none"
-    - name: SMTP_FROM_ADDRESS
-      value: "Mastodon <notifications@domain.com>"
+
+web:
+  port: 3000
+  replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 2
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 sidekiq:
   concurrency: 25
+  replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 streaming:
   port: 4000
@@ -221,6 +235,27 @@ streaming:
   # The base url for streaming can be set if the streaming API is deployed to
   # a different domain/subdomain.
   # base_url: wws://streaming.example.com
+  replicas: 1
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
 externalAuth:
   oidc:
