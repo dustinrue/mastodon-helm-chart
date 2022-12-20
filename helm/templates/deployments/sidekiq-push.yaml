@@ -3,14 +3,14 @@ kind: Deployment
 metadata:
   name: {{ include "mastodon.fullname" . }}-sidekiq-push
   labels:
-    {{- include "mastodon.labels" . | nindent 4 }}
+    {{- include "mastodon.sidekiq-push-labels" . | nindent 4 }}
 spec:
   {{- if not .Values.sidekiq.autoscaling.enabled }}
   replicas: {{ .Values.sidekiq.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+      {{- include "mastodon.sidekiq-push-selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,7 +20,7 @@ spec:
         # roll the pods to pick up any db migrations or other changes
         {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
       labels:
-        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        {{- include "mastodon.sidekiq-push-selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: sidekiq
         app.kubernetes.io/part-of: rails
     spec:

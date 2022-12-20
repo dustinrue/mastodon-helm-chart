@@ -42,11 +42,109 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "mastodon.sidekiq-default-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-default-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-ingress-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-ingress-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-mailers-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-mailers-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-pull-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-pull-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-push-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-push-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-scheduler-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-scheduler-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{- define "mastodon.streaming-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.streaming-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
 {{/*
 Selector labels
 */}}
 {{- define "mastodon.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "mastodon.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-default-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-default
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-ingress-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-ingress
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-mailers-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-mailers
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-pull-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-pull
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-push-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-push
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-scheduler-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-scheduler
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.streaming-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-streaming
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

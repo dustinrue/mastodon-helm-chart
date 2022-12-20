@@ -12,6 +12,9 @@ spec:
     name: {{ include "mastodon.fullname" . }}-web
   minReplicas: {{ .Values.web.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.web.autoscaling.maxReplicas }}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
   metrics:
     {{- if .Values.web.autoscaling.targetCPUUtilizationPercentage }}
     - type: Resource
