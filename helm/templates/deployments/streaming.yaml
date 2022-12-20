@@ -3,14 +3,14 @@ kind: Deployment
 metadata:
   name: {{ include "mastodon.fullname" . }}-streaming
   labels:
-    {{- include "mastodon.labels" . | nindent 4 }}
+    {{- include "mastodon.streaming-labels" . | nindent 4 }}
 spec:
   {{- if not .Values.streaming.autoscaling.enabled }}
   replicas: {{ .Values.streaming.replicas }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+      {{- include "mastodon.streaming-selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,7 +20,7 @@ spec:
         # roll the pods to pick up any db migrations or other changes
         {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
       labels:
-        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        {{- include "mastodon.streaming-selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: streaming
         app.kubernetes.io/part-of: rails
     spec:
