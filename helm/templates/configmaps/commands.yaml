@@ -1,0 +1,13 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "mastodon.fullname" . }}-ob
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+data:
+  database-backup.sh: |
+    #!/bin/sh
+
+    BACKUP_DATE=$(date +%Y-%m-%d)
+    BACKUP_TIME=$(date +%H-%M-%S)
+    pg_dump ${DB_NAME} | gzip -9 - > /var/database-backups/${DB_NAME}-${BACKUP_DATE}_${BACKUP_TIME}.sql.gz

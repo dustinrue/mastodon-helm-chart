@@ -13,6 +13,11 @@ data:
   DB_NAME: {{ .Values.mastodon.postgresql.database }}
   DB_USER: {{ .Values.mastodon.postgresql.auth.username }}
   DB_POOL: {{ .Values.sidekiq.concurrency | quote }}
+  # Same info but ready for the db-utils container
+  PGHOST: {{ .Values.mastodon.postgresql.host }}
+  PGPORT: {{ .Values.mastodon.postgresql.port | default "5432" | quote }}
+  PGDATABASE: {{ .Values.mastodon.postgresql.database }}
+  PGUSER: {{ .Values.mastodon.postgresql.auth.username }}
   DEFAULT_LOCALE: {{ .Values.mastodon.locale }}
   {{- if .Values.mastodon.elasticsearch.host }}
   ES_ENABLED: "true"
