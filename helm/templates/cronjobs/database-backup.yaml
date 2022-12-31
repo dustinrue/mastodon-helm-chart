@@ -1,0 +1,85 @@
+{{- if (and .Values.mastodon.cron.databaseBackup.enabled .Values.mastodon.cron.databaseBackup.volumeClaimName) }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "mastodon.fullname" . }}-database-backup
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.mastodon.cron.databaseBackup.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ include "mastodon.fullname" . }}-database-backup
+          {{- with .Values.jobAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          restartPolicy: OnFailure
+                {{- if (eq .Values.mastodon.storage.type "csi") }}
+                # ensure we run on the same node as the other rails components; only
+                # required when using PVCs that are ReadWriteOnce
+                # FIXME: This might not work as intended on multi-AZ setups
+                {{- if or (eq "ReadWriteOnce" .Values.mastodon.csi.assets.accessMode) (eq "ReadWriteOnce" .Values.mastodon.csi.system.accessMode) }}
+                affinity:
+                  podAffinity:
+                    requiredDuringSchedulingIgnoredDuringExecution:
+                      - labelSelector:
+                          matchExpressions:
+                            - key: app.kubernetes.io/part-of
+                              operator: In
+                              values:
+                                - rails
+                        topologyKey: kubernetes.io/hostname
+                {{- end }}
+          {{- end }}
+          containers:
+            - name: {{ include "mastodon.fullname" . }}-database-backup
+              image: "postgres:15-alpine"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - /opt/bin/database-backup.sh
+              envFrom:
+                - configMapRef:
+                    name: {{ include "mastodon.fullname" . }}-env
+                - secretRef:
+                    name: {{ template "mastodon.secretName" . }}
+              env:
+                - name: "DB_PASS"
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "mastodon.postgresql.secretName" . }}
+                      key: DB_PASS
+                - name: "REDIS_PASSWORD"
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "mastodon.redis.secretName" . }}
+                      key: REDIS_PASS
+              volumeMounts:
+                - name: database-backup-volume
+                  mountPath: /var/database-backups
+                - name: opt-bin
+                  mountPath: /opt/bin
+          volumes:
+            - name: database-backup-volume
+              persistentVolumeClaim:
+                claimName: {{ .Values.mastodon.cron.databaseBackup.volumeClaimName }}
+            - name: opt-bin
+              configMap:
+                name: {{ include "mastodon.fullname" . }}-ob
+                defaultMode: 0755
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}

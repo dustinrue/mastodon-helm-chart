@@ -84,11 +84,20 @@ mastodon:
   # web_domain: mastodon.example.com
   # If set to true, the frontpage of your Mastodon server will always redirect to the first profile in the database and registrations will be disabled.
   singleUserMode: false
+  locale: en
   cron:
     # run `tootctl media remove` every week
     removeMedia:
       enabled: true
       schedule: "0 0 * * 0"
+
+    # Enable automatic database backups. You must provide the name of a volume claim here
+    # for this to work. A volume will NOT be requested. Defaults to run at 3am UTC or your
+    # configued timezone
+    databaseBackup:
+      enabled: true
+      schedule: "0 3 * * *"
+      volumeClaimName: ""
   secrets:
     # name of an existing secret that will contain the following values
     #   SECRET_KEY_BASE
@@ -256,6 +265,9 @@ streaming:
   nodeSelector: {}
   tolerations: []
   affinity: {}
+
+dbutils:
+  resources: {}
 
 externalAuth:
   oidc:
