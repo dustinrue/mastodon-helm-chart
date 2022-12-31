@@ -33,6 +33,44 @@ In the helm directory, edit the values file or create a new one and reference it
 
 This will install multiple copies of the Mastodon docker image, each running a specific aspect of Mastodon including web, streaming and sidekiq. In my testing I was able to do everything a normal Mastodon instance can do. What I did not do was setup any storage for media uploads.
 
+## Database Backups
+
+You can, optionally, create an automatic database backup cronjob. To enable this you must manually create a Persistent Volume Claim of time "ReadWriteMany" and provide the name of the PVC to this chart. Here is an example PVC:
+
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-postgresql-backup-0
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 8Gi
+  storageClassName: freenas-nfs-csi
+```
+
+Next, set the cronjob option to enabled and add the PVC name:
+
+```
+...
+  cron:
+    databaseBackup:
+      enabled: true
+      schedule: "0 3 * * *"
+      volumeClaimName: "data-postgresql-backup-0"
+```
+
+You can also enable a utility container that will mount the same directory which you can use to verify the backups or, if needed, restore a backup. To do so add:
+
+```
+dbutils:
+  enabled: false
+```
+
+to your values file
+
 ## Contact
 
 You can find me @dustinrue@fosstodon.org 

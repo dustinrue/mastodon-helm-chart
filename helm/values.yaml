@@ -91,9 +91,9 @@ mastodon:
       enabled: true
       schedule: "0 0 * * 0"
 
-    # Enable automatic database backups. You must provide the name of a volume claim here
-    # for this to work. A volume will NOT be requested. Defaults to run at 3am UTC or your
-    # configued timezone
+    # Enable automatic database backups. You must provide the name of a ReadWriteMany volume 
+    # claim here for this to work. A volume will NOT be requested. Defaults to run at 3am UTC
+    # or your configued timezone
     databaseBackup:
       enabled: true
       schedule: "0 3 * * *"
@@ -266,7 +266,12 @@ streaming:
   tolerations: []
   affinity: {}
 
+# Create a special pod that can be used to perform direct database operations
+# If you also have database backups the backup directory will be mounted
+# assuming it is a ReadWriteMany volume.
+# Useful if you need to restore a database backup, for example
 dbutils:
+  enabled: false
   resources: {}
 
 externalAuth:
