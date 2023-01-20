@@ -37,7 +37,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["/opt/node/bin/node", "./streaming"]
+          command: ["/usr/local/bin/node", "./streaming"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
