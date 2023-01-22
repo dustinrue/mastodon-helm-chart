@@ -91,6 +91,21 @@ mastodon:
       enabled: true
       schedule: "0 0 * * 0"
 
+    # run `tootctl status remove` every week. Especially useful for small personal setups. Content older than "days" will be removed. 90 days is the default value. Set skipMediaRemoval to true if you experience S3 errors.
+    removeToots:
+      enabled: false
+      days: "90"
+      skipMediaRemoval: false
+      schedule: "0 1 * * 0"
+
+    # periodically remove dead accounts. `tootctl accounts cull` will go to every home instance for every account your server is aware of and see if it is still valid. If not, then it is removed from the database. Runs every 6 months if enabled. Likely not needed if you have set your content retention lower than 6 months.
+    # Domains is a space separated list of domains to include. If not set them all domains are considered.
+    cullAccounts:
+      enabled: false
+      concurrency: "5"
+      domains: ""
+      schedule: "0 0 * */6 0"
+
     # Enable automatic database backups. You must provide the name of a ReadWriteMany volume 
     # claim here for this to work. A volume will NOT be requested. Defaults to run at 3am UTC
     # or your configued timezone

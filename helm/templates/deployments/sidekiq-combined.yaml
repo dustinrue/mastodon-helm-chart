@@ -1,16 +1,17 @@
+{{- if .Values.sidekiq.singleMode.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "mastodon.fullname" . }}-streaming
+  name: {{ include "mastodon.fullname" . }}-sidekiq-combined
   labels:
-    {{- include "mastodon.streaming-labels" . | nindent 4 }}
+    {{- include "mastodon.sidekiq-combined-labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.streaming.autoscaling.enabled }}
-  replicas: {{ .Values.streaming.replicas }}
-  {{- end }}
+  replicas: 1
   selector:
     matchLabels:
-      {{- include "mastodon.streaming-selectorLabels" . | nindent 6 }}
+      {{- include "mastodon.sidekiq-combined-selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate
   template:
     metadata:
       annotations:
@@ -20,8 +21,8 @@ spec:
         # roll the pods to pick up any db migrations or other changes
         {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
       labels:
-        {{- include "mastodon.streaming-selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: streaming
+        {{- include "mastodon.sidekiq-combined-selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: sidekiq
         app.kubernetes.io/part-of: rails
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -32,12 +33,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}-streaming
+        - name: {{ .Chart.Name }}-sidekiq-combined
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["node", "./streaming"]
+          command: ["bundle", "exec", "sidekiq", "-c", "{{ .Values.sidekiq.concurrency }}"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
@@ -54,29 +55,18 @@ spec:
                 secretKeyRef:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
-          ports:
-            - name: streaming
-              containerPort: {{ .Values.streaming.port }}
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /api/v1/streaming/health
-              port: streaming
-          readinessProbe:
-            httpGet:
-              path: /api/v1/streaming/health
-              port: streaming
           resources:
-            {{- toYaml .Values.streaming.resources | nindent 12 }}
-      {{- with .Values.streaming.nodeSelector }}
+            {{- toYaml .Values.sidekiq.resources | nindent 12 }}
+      {{- with .Values.sidekiq.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.streaming.affinity }}
+      {{- with .Values.sidekiq.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.streaming.tolerations }}
+      {{- with .Values.sidekiq.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
