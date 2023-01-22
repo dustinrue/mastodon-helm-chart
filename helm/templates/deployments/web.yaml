@@ -36,7 +36,7 @@ spec:
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["/bin/sh","-c"]
-          args: ["bundle exec rake assets:precompile && bundle exec puma -C config/puma.rb"]
+          args: ["bundle exec puma -C config/puma.rb"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env

@@ -96,6 +96,15 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
+{{- define "mastodon.sidekiq-combined-labels" -}}
+helm.sh/chart: {{ include "mastodon.chart" . }}
+{{ include "mastodon.sidekiq-combined-selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
 {{- define "mastodon.streaming-labels" -}}
 helm.sh/chart: {{ include "mastodon.chart" . }}
 {{ include "mastodon.streaming-selectorLabels" . }}
@@ -140,6 +149,11 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 
 {{- define "mastodon.sidekiq-scheduler-selectorLabels" -}}
 app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-scheduler
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.sidekiq-combined-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-sidekiq-combined
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

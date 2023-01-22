@@ -1,3 +1,4 @@
+{{- if not .Values.sidekiq.singleMode.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,7 +38,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["bundle", "exec", "sidekiq", "-c", "25", "-q", "default"]
+          command: ["bundle", "exec", "sidekiq", "-c", "{{ .Values.sidekiq.concurrency }}", "-q", "default"]
           envFrom:
             - configMapRef:
                 name: {{ include "mastodon.fullname" . }}-env
@@ -68,3 +69,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}
