@@ -91,6 +91,13 @@ mastodon:
       enabled: true
       schedule: "0 0 * * 0"
 
+    # run `tootctl status remove` every week. Especially useful for small personal setups. Content older than "days" will be removed. 90 days is the default value. Set skipMediaRemoval to true if you experience S3 errors.
+    removeToots:
+      enabled: false
+      days: "90"
+      skipMediaRemoval: false
+      schedule: "0 1 * * 0"
+
     # Enable automatic database backups. You must provide the name of a ReadWriteMany volume 
     # claim here for this to work. A volume will NOT be requested. Defaults to run at 3am UTC
     # or your configued timezone

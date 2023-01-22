@@ -1,0 +1,62 @@
+{{ if .Values.mastodon.cron.removeToots.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "mastodon.fullname" . }}-toot-removal
+  labels:
+    {{- include "mastodon.labels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.mastodon.cron.removeToots.schedule }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: {{ include "mastodon.fullname" . }}-toot-removal
+          {{- with .Values.jobAnnotations }}
+          annotations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: {{ include "mastodon.fullname" . }}-toot-removal
+              image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
+              imagePullPolicy: {{ .Values.image.pullPolicy }}
+              command:
+                - bin/tootctl
+                - statuses
+                - remove
+                - --days
+                - "{{ .Values.mastodon.cron.removeToots.days }}"
+                {{- if .Values.mastodon.cron.removeToots.skipMediaRemoval }}
+                - --skip-media-remove
+                {{- end }}
+              envFrom:
+                - configMapRef:
+                    name: {{ include "mastodon.fullname" . }}-env
+                - secretRef:
+                    name: {{ template "mastodon.secretName" . }}
+              env:
+                - name: "DB_PASS"
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "mastodon.postgresql.secretName" . }}
+                      key: DB_PASS
+                - name: "REDIS_PASSWORD"
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ template "mastodon.redis.secretName" . }}
+                      key: REDIS_PASS
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.affinity }}
+          affinity:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.tolerations }}
+          tolerations:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+{{- end }}
