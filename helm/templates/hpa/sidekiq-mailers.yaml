@@ -1,4 +1,4 @@
-{{- if .Values.sidekiq.autoscaling.enabled }}
+{{- if and (.Values.sidekiq.autoscaling.enabled) (not .Values.sidekiq.singleMode.enabled) }}
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:

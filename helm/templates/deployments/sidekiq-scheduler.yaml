@@ -1,4 +1,5 @@
-{{- if not .Values.sidekiq.singleMode.enabled }}apiVersion: apps/v1
+{{- if not .Values.sidekiq.singleMode.enabled }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "mastodon.fullname" . }}-sidekiq-scheduler
