@@ -212,6 +212,9 @@ web:
   affinity: {}
 
 sidekiq:
+  # Use a single pod for all queues. Single pod is more memory efficient and multiple pods scale horizontally better
+  singleMode: 
+    enabled: true
   concurrency: 25
   replicas: 1
   autoscaling:
