@@ -9,6 +9,8 @@ include:
 
 Build Chart (Testing):
   extends: .helm-chart-build
+  variables:
+    SOURCE_DIR: "helm"
   tags:
     - web
   only:
@@ -21,7 +23,8 @@ Build Chart (Release):
   tags:
     - web
   variables:
-      RELEASE: "true"
+    RELEASE_VERSION: "true"
+    SOURCE_DIR: "helm"
   only:
       - tags
   except:
@@ -29,9 +32,11 @@ Build Chart (Release):
 
 Deploy Chart:
   extends: .helm-chart-deploy
+  variables:
+    SOURCE_DIR: "helm"
   tags:
     - web
   only:
-      - tags
+    - tags
   except:
-      - branches
+    - branches
