@@ -1,0 +1,5 @@
+include:
+  - remote: https://gitlab.dustinrue.com/opensource/gitlab-ci/-/raw/main/v1.0/main.yaml
+  - remote: https://gitlab.dustinrue.com/opensource/gitlab-ci/-/raw/feature/helm/v1.0/helm/main.yaml
+
+
