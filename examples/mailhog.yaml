@@ -2,7 +2,7 @@ ingress:
   enabled: true
   labels: {}
   hosts:
-    - host: mailhog-macodon.dustinrue.com
+    - host: mailhog-mastodon.dustinrue.com
       paths:
         - path: "/"
           pathType: Prefix
