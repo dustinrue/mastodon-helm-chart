@@ -8,8 +8,6 @@ auth:
   password: "mastodon"
 master:
   disableCommands: []
-  persistence:
-    storageClass: "freenas-iscsi-csi"
 replica:
   ## @param replica.replicaCount Number of Redis&reg; replicas to deploy
   ##
