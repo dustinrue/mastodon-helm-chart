@@ -34,6 +34,7 @@ Deploy Chart:
   extends: .helm-chart-deploy
   variables:
     SOURCE_DIR: "helm"
+    DESTINATION: /var/www/html/dustin/helm.dustinrue.com
   tags:
     - web
   only:
