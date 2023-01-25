@@ -1,5 +1,37 @@
 include:
-  - remote: https://gitlab.dustinrue.com/opensource/gitlab-ci/-/raw/main/v1.0/main.yaml
-  - remote: https://gitlab.dustinrue.com/opensource/gitlab-ci/-/raw/feature/helm/v1.0/helm/main.yaml
+  - project: opensource/gitlab-ci
+    ref: main
+    file: "/v1.0/main.yaml"
+  - project: opensource/gitlab-ci
+    ref: feature/helm
+    file: "/v1.0/helm/main.yaml"
 
 
+Build Chart (Testing):
+  extends: .helm-chart-build
+  tags:
+    - web
+  only:
+      - branches
+  except:
+      - tags
+
+Build Chart (Release):
+  extends: .helm-chart-build
+  tags:
+    - web
+  variables:
+      RELEASE: "true"
+  only:
+      - tags
+  except:
+      - branches
+
+Deploy Chart:
+  extends: .helm-chart-deploy
+  tags:
+    - web
+  only:
+      - tags
+  except:
+      - branches
