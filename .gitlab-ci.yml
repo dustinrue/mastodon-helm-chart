@@ -3,7 +3,7 @@ include:
     ref: main
     file: "/v1.0/main.yaml"
   - project: opensource/gitlab-ci
-    ref: feature/helm
+    ref: main
     file: "/v1.0/helm/main.yaml"
 
 
