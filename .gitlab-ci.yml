@@ -3,12 +3,14 @@ include:
     ref: main
     file: "/v1.0/main.yaml"
   - project: opensource/gitlab-ci
-    ref: main
+    ref: feature/helm
     file: "/v1.0/helm/main.yaml"
 
 
 Build Chart (Testing):
   extends: .helm-chart-build
+  variables:
+    SOURCE_DIR: "helm"
   tags:
     - web
   only:
@@ -21,7 +23,8 @@ Build Chart (Release):
   tags:
     - web
   variables:
-      RELEASE: "true"
+    RELEASE_VERSION: "true"
+    SOURCE_DIR: "helm"
   only:
       - tags
   except:
@@ -29,9 +32,12 @@ Build Chart (Release):
 
 Deploy Chart:
   extends: .helm-chart-deploy
+  variables:
+    SOURCE_DIR: "helm"
+    DESTINATION: /var/www/html/dustin/helm.dustinrue.com
   tags:
     - web
   only:
-      - tags
+    - tags
   except:
-      - branches
+    - branches
