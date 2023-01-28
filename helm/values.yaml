@@ -84,6 +84,10 @@ mastodon:
   # web_domain: mastodon.example.com
   # If set to true, the frontpage of your Mastodon server will always redirect to the first profile in the database and registrations will be disabled.
   singleUserMode: false
+  initialUser:
+    enabled: true
+    username: "dustinrue"
+    email: "dustin.rue@gmail.com"
   locale: en
   cron:
     # run `tootctl media remove` every week
