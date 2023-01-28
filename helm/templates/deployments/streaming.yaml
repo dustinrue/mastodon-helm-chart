@@ -4,6 +4,9 @@ metadata:
   name: {{ include "mastodon.fullname" . }}-streaming
   labels:
     {{- include "mastodon.streaming-labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "3"
 spec:
   {{- if not .Values.streaming.autoscaling.enabled }}
   replicas: {{ .Values.streaming.replicas }}
