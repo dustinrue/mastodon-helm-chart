@@ -2,6 +2,7 @@
 {{- $fullName := include "mastodon.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- $streamingPort := .Values.streaming.port -}}
+{{- $nginxPort := "80" -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
   {{- if not (hasKey .Values.ingress.annotations "kubernetes.io/ingress.class") }}
   {{- $_ := set .Values.ingress.annotations "kubernetes.io/ingress.class" .Values.ingress.className}}
@@ -70,6 +71,132 @@ spec:
               {{- else }}
               serviceName: {{ $fullName }}-streaming
               servicePort: {{ $streamingPort }}
+              {{- end }}
+          - path: {{ .path }}sw.js
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}assets/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}avatars/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}emoji/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}headers/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}packs/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}shortcuts/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}sounds/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
+              {{- end }}
+          - path: {{ .path }}system/
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-nginx
+                port:
+                  number: {{ $nginxPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-nginx
+              servicePort: {{ $nginxPort }}
               {{- end }}
           {{- end }}
     {{- end }}
