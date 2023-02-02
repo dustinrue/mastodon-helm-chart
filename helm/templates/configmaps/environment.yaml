@@ -8,9 +8,7 @@ metadata:
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
   annotations:
-    "helm.sh/hook": pre-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
-    "helm.sh/hook-weight": "-5"
+    "argocd.argoproj.io/hook": PreSync
 data:
   DB_HOST: {{ .Values.mastodon.postgresql.host }}
   DB_PORT: {{ .Values.mastodon.postgresql.port | default "5432" | quote }}
