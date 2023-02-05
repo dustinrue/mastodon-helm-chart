@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
   annotations:
-    "argocd.argoproj.io/hook": PreSync
+    argocd.argoproj.io/sync-wave: "-1"
 data:
   DB_HOST: {{ .Values.mastodon.postgresql.host }}
   DB_PORT: {{ .Values.mastodon.postgresql.port | default "5432" | quote }}
