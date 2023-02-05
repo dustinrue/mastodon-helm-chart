@@ -38,7 +38,7 @@ Deploy Chart:
   tags:
     - web
   only:
-    ref:
+    refs:
       - main 
 
 Deploy Chart (Release):
