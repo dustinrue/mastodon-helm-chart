@@ -7,7 +7,6 @@ metadata:
   name: {{ include "mastodon.fullname" . }}-env
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
-
 data:
   DB_HOST: {{ .Values.mastodon.postgresql.host }}
   DB_PORT: {{ .Values.mastodon.postgresql.port | default "5432" | quote }}

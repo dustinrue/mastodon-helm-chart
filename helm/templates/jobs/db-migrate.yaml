@@ -7,10 +7,6 @@ metadata:
   name: {{ include "mastodon.fullname" . }}-db-migrate
   labels:
     {{- include "mastodon.labels" . | nindent 4 }}
-  annotations:
-    "helm.sh/hook": post-install,pre-upgrade
-    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
-    "helm.sh/hook-weight": "-2"
 spec:
   template:
     metadata:
