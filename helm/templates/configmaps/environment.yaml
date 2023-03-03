@@ -25,8 +25,8 @@ data:
   DEFAULT_LOCALE: {{ .Values.mastodon.locale }}
   {{- if .Values.mastodon.elasticsearch.host }}
   ES_ENABLED: "true"
-  ES_HOST: {{ .Values.mastodon.elasticsearch.host }}
-  ES_PORT: {{ .Values.mastodon.elasticsearch.port | default "9200" }}
+  ES_HOST: {{ .Values.mastodon.elasticsearch.host | quote }}
+  ES_PORT: {{ .Values.mastodon.elasticsearch.port | default "9200" | quote }}
   {{- end }}
   LOCAL_DOMAIN: {{ .Values.mastodon.local_domain }}
   {{- if .Values.mastodon.web_domain }}

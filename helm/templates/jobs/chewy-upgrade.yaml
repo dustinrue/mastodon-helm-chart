@@ -67,7 +67,7 @@ spec:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
             - name: "PORT"
-              value: {{ .Values.mastodon.web.port | quote }}
+              value: {{ .Values.mastodon.elasticsearch.port | quote }}
           {{- if (not ( eq .Values.mastodon.storage.type "s3" ) ) }}
           volumeMounts:
             - name: assets
