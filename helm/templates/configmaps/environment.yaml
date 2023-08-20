@@ -54,6 +54,9 @@ data:
   {{- if .Values.mastodon.storage.s3.alias_host }}
   S3_PERMISSION: {{ .Values.mastodon.storage.s3.permission}}
   {{- end }}
+  {{- if .Values.mastodon.storage.s3.disableChecksumMode }}
+  S3_DISABLE_CHECKSUM_MODE: "true"
+  {{- end }}
   {{- end }}
   {{- if .Values.mastodon.smtp.auth_method }}
   SMTP_AUTH_METHOD: {{ .Values.mastodon.smtp.auth_method }}

@@ -142,6 +142,7 @@ mastodon:
       endpoint: https://us-east-1.linodeobjects.com
       hostname: us-east-1.linodeobjects.com
       region: ""
+      disableChecksumMode: false # set to true for Cloudflare R2, maybe others
       # If you have a caching proxy, enter its base URL here.
       alias_host: ""
       permission: "public" # public or private. Use private for Cloudflare R2
