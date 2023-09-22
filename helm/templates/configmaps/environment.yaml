@@ -24,9 +24,10 @@ data:
   PGUSER: {{ .Values.mastodon.postgresql.auth.username }}
   DEFAULT_LOCALE: {{ .Values.mastodon.locale }}
   {{- if .Values.mastodon.elasticsearch.host }}
-  ES_ENABLED: "true"
+  ES_ENABLED: {{ .Values.mastodon.elasticsearch.enabled }}
   ES_HOST: {{ .Values.mastodon.elasticsearch.host | quote }}
   ES_PORT: {{ .Values.mastodon.elasticsearch.port | default "9200" | quote }}
+  ES_PRESET: {{ .Values.mastodon.elasticsearch.es_preset | default "single_node_cluster" | quote }}
   {{- end }}
   LOCAL_DOMAIN: {{ .Values.mastodon.local_domain }}
   {{- if .Values.mastodon.web_domain }}
