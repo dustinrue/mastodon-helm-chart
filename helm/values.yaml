@@ -182,6 +182,7 @@ mastodon:
     existingSecret: ""
     host: "" # setting a host value will enable Elasticsearch support
     port: 9200
+    es_preset: "single_node_cluster" #  https://docs.joinmastodon.org/admin/elasticsearch/#choosing-the-correct-preset
     # auth - this should be added, ES does support auth or could have a proxy in front of it
   
 
