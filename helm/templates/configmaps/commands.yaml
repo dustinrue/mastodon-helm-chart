@@ -11,3 +11,4 @@ data:
     BACKUP_DATE=$(date +%Y-%m-%d)
     BACKUP_TIME=$(date +%H-%M-%S)
     pg_dump ${DB_NAME} | gzip -9 - > /var/database-backups/${DB_NAME}-${BACKUP_DATE}_${BACKUP_TIME}.sql.gz
+    find /var/database-backups -type f -ctime +5 | xargs rm -f
