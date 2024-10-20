@@ -35,7 +35,7 @@ spec:
         - name: {{ .Chart.Name }}-streaming
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.streamingImage.repository }}:v{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["node", "./streaming"]
           envFrom:

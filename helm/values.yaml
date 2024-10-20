@@ -10,6 +10,12 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+streamingImage:
+  repository: ghcr.io/mastodon/mastodon-streaming
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
@@ -126,6 +132,10 @@ mastodon:
     existingSecret: ""
     secret_key_base: ""
     otp_secret: ""
+    # gen using bin/rails db:encryption:init
+    active_record_encryption_deterministic_key: ""
+    active_record_encryption_key_derivation_salt: ""
+    active_record_encryption_primary_key: ""
     vapid:
       private_key: ""
       public_key:  ""
