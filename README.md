@@ -102,4 +102,4 @@ to your values file
 
 ## Contact
 
-You can find me @dustinrue@mastodon.dustinrue.com
+You can find me at https://mastodon.chateaude.luxe/@dustinrue
