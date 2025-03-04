@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "mastodon.selectorLabels" . | nindent 6 }}
+      {{- include "mastodon.nginx-selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -20,7 +20,7 @@ spec:
         # roll the pods to pick up any db migrations or other changes
         {{- include "mastodon.rollingPodAnnotations" . | nindent 8 }}
       labels:
-        {{- include "mastodon.selectorLabels" . | nindent 8 }}
+        {{- include "mastodon.nginx-selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

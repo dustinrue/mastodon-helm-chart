@@ -162,6 +162,17 @@ app.kubernetes.io/name: {{ include "mastodon.name" . }}-streaming
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+{{- define "mastodon.nginx-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-nginx
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "mastodon.dbutils-selectorLabels" -}}
+app.kubernetes.io/name: {{ include "mastodon.name" . }}-nginx
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+
 {{/*
 Create the name of the service account to use
 */}}
