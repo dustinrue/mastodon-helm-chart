@@ -212,7 +212,7 @@ Get the postgresql secret.
 */}}
 {{- define "mastodon.postgresql.secretName" -}}
 {{- if .Values.mastodon.postgresql.existingSecret }}
-    {{- printf "%s" (tpl .Values.postgresql.existingSecret $) -}}
+    {{- printf "%s" (tpl .Values.mastodon.postgresql.existingSecret $) -}}
 {{- else -}}
     {{- printf "%s" (include "mastodon.fullname" .) -}}
 {{- end -}}
