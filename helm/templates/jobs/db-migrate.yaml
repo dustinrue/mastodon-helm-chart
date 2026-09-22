@@ -71,6 +71,10 @@ spec:
                 secretKeyRef:
                   name: {{ template "mastodon.redis.secretName" . }}
                   key: REDIS_PASS
+            {{- if .Values.dbMigrate.skipPostDeploymentMigrations }}
+            - name: "SKIP_POST_DEPLOYMENT_MIGRATIONS"
+              value: "true"
+            {{- end }}
           {{- if (eq .Values.mastodon.storage.type "csi" ) }}
           volumeMounts:
             - name: assets
