@@ -332,6 +332,16 @@ dbutils:
   enabled: false
   resources: {}
 
+# Controls for the db-migrate hook job (templates/jobs/db-migrate.yaml).
+dbMigrate:
+  # Set to true to run only pre-deployment migrations
+  # (SKIP_POST_DEPLOYMENT_MIGRATIONS=true) - see the release notes for the
+  # version you're upgrading to for whether a two-phase migration is
+  # called for (Mastodon flags this explicitly when it applies). Leave
+  # false for the normal single-phase upgrade path: deploy new code, run
+  # the full migration set immediately.
+  skipPostDeploymentMigrations: false
+
 externalAuth:
   oidc:
     # OpenID Connect support is proposed in PR #16221 and awaiting merge.
